@@ -1,0 +1,5 @@
+node_modules/
+dist/
+build/
+public/assets/sprites/contact-sheet.png
+.DS_Store

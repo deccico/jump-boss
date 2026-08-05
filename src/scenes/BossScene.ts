@@ -77,6 +77,7 @@ export class BossScene extends Phaser.Scene {
     this.lastTransformHitMs = 0;
     this.patrolDir = -1;
 
+    this.cameras.main.fadeIn(300, 245, 242, 232);
     this.add.image(0, 0, PAPER_KEY).setOrigin(0, 0);
     this.sfx = createSfx();
 

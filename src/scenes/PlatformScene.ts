@@ -37,6 +37,7 @@ export class PlatformScene extends Phaser.Scene {
   create(): void {
     const { width, height } = this.scale;
     this.ending = false;
+    this.cameras.main.fadeIn(300, 245, 242, 232);
     this.add.image(0, 0, PAPER_KEY).setOrigin(0, 0);
     this.sfx = createSfx();
 
@@ -87,7 +88,8 @@ export class PlatformScene extends Phaser.Scene {
     }
 
     this.hud = new Hud(this);
-    addMarkerText(this, width / 2, height - 18, 'arrows move · SPACE jumps · E is special', 22, '#6b6b6b');
+    // written on the ground band
+    addMarkerText(this, width / 2, height - 13, 'arrows move · SPACE jumps · E is special', 21, '#57503f');
   }
 
   private showToast(labelKey: string): void {

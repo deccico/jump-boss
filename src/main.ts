@@ -1,6 +1,7 @@
 import '@fontsource/patrick-hand';
 import Phaser from 'phaser';
 import { BootScene } from './scenes/BootScene';
+import { BossScene } from './scenes/BossScene';
 import { CharacterSelectScene } from './scenes/CharacterSelectScene';
 import { PlatformScene } from './scenes/PlatformScene';
 import { TitleScene } from './scenes/TitleScene';
@@ -21,5 +22,5 @@ new Phaser.Game({
       gravity: { x: 0, y: 1400 },
     },
   },
-  scene: [BootScene, TitleScene, CharacterSelectScene, PlatformScene],
+  scene: [BootScene, TitleScene, CharacterSelectScene, PlatformScene, BossScene],
 });

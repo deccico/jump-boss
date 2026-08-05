@@ -4,6 +4,7 @@ import { BootScene } from './scenes/BootScene';
 import { BossScene } from './scenes/BossScene';
 import { CharacterSelectScene } from './scenes/CharacterSelectScene';
 import { PlatformScene } from './scenes/PlatformScene';
+import { RipScene } from './scenes/RipScene';
 import { TitleScene } from './scenes/TitleScene';
 
 const game = new Phaser.Game({
@@ -22,7 +23,7 @@ const game = new Phaser.Game({
       gravity: { x: 0, y: 1400 },
     },
   },
-  scene: [BootScene, TitleScene, CharacterSelectScene, PlatformScene, BossScene],
+  scene: [BootScene, TitleScene, CharacterSelectScene, PlatformScene, BossScene, RipScene],
 });
 
 // dev/debug hook (used by the headless smoke tests)

@@ -6,7 +6,7 @@ import { CharacterSelectScene } from './scenes/CharacterSelectScene';
 import { PlatformScene } from './scenes/PlatformScene';
 import { TitleScene } from './scenes/TitleScene';
 
-new Phaser.Game({
+const game = new Phaser.Game({
   type: Phaser.AUTO,
   parent: 'game',
   width: 960,
@@ -24,3 +24,6 @@ new Phaser.Game({
   },
   scene: [BootScene, TitleScene, CharacterSelectScene, PlatformScene, BossScene],
 });
+
+// dev/debug hook (used by the headless smoke tests)
+(window as unknown as { __game: Phaser.Game }).__game = game;

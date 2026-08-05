@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { SCREEN_ORDER, sceneKeyFor, type ScreenId } from '../game/flow';
 import { SPRITE_KEYS, spritePath } from '../game/sprites';
 import { createPaperTexture, PAPER_KEY } from './ui/paper';
 import { addMarkerText } from './ui/text';
@@ -22,6 +23,13 @@ export class BootScene extends Phaser.Scene {
   }
 
   create(): void {
+    // dev shortcut: ?screen=bossA jumps straight to a screen
+    const requested = new URLSearchParams(window.location.search).get('screen');
+    if (requested && (SCREEN_ORDER as readonly string[]).includes(requested)) {
+      const target = sceneKeyFor(requested as ScreenId);
+      this.scene.start(target.key, target.data);
+      return;
+    }
     this.scene.start('Title');
   }
 }

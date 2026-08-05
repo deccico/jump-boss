@@ -134,6 +134,14 @@ export class BossScene extends Phaser.Scene {
 
     this.hud = new Hud(this);
 
+    // the finale is meant to be won monster-vs-monster: X pickups keep
+    // respawning on the side platforms so the kid can charge the special
+    if (this.bossId === 'mayhem') {
+      for (const platform of SIDE_PLATFORMS) {
+        this.spawnArenaPickup(platform.x + platform.w / 2, platform.y - 30);
+      }
+    }
+
     // entrance card
     const card = addMarkerText(this, width / 2, height * 0.32, `${this.def.name}!!`, 54, '#c2601a');
     card.setScale(0.2).setAlpha(0);
@@ -144,6 +152,29 @@ export class BossScene extends Phaser.Scene {
         { alpha: 1, duration: 900 },
         { alpha: 0, duration: 300, onComplete: () => card.destroy() },
       ],
+    });
+  }
+
+  private spawnArenaPickup(x: number, y: number): void {
+    const pickup = this.physics.add.staticImage(x, y, 'icon-x');
+    pickup.setDisplaySize(42, 42);
+    pickup.refreshBody();
+    this.tweens.add({
+      targets: pickup,
+      y: y - 6,
+      duration: 800,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut',
+    });
+    this.physics.add.overlap(this.player.sprite, pickup, () => {
+      pickup.destroy();
+      this.player.pickUp('x', this.time.now);
+      this.time.delayedCall(15_000, () => {
+        if (!this.ending && this.scene.isActive()) {
+          this.spawnArenaPickup(x, y);
+        }
+      });
     });
   }
 

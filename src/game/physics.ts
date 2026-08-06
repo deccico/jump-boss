@@ -10,10 +10,17 @@ export const JUMP_VELOCITY = -560;
 export const STOMP_BOUNCE = -420;
 export const COYOTE_MS = 120;
 export const JUMP_BUFFER_MS = 120;
+/** One extra jump in mid-air (the "double space jump"). */
+export const MAX_AIR_JUMPS = 1;
 
 /** Peak height of a jump launched at `velocity` px/s: v^2 / 2g. */
 export function jumpHeight(velocity: number, gravity: number = GRAVITY): number {
   return (velocity * velocity) / (2 * gravity);
+}
+
+/** A mid-air jump is allowed while the player has air jumps left. */
+export function canAirJump(airJumpsUsed: number, maxAirJumps: number = MAX_AIR_JUMPS): boolean {
+  return airJumpsUsed < maxAirJumps;
 }
 
 /**

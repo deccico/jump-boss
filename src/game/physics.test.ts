@@ -1,5 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { canJump, COYOTE_MS, GRAVITY, JUMP_BUFFER_MS, JUMP_VELOCITY, jumpHeight } from './physics';
+import {
+  canAirJump,
+  canJump,
+  COYOTE_MS,
+  GRAVITY,
+  JUMP_BUFFER_MS,
+  JUMP_VELOCITY,
+  jumpHeight,
+  MAX_AIR_JUMPS,
+} from './physics';
 
 describe('jump physics', () => {
   it('computes the base jump height as v^2 / 2g (= 112 px)', () => {
@@ -26,5 +35,12 @@ describe('jump physics', () => {
   it('refuses to jump with no ground contact or no jump press', () => {
     expect(canJump(null, 1000, 1000)).toBe(false);
     expect(canJump(1000, null, 1000)).toBe(false);
+  });
+
+  it('allows exactly one extra jump in mid-air', () => {
+    expect(MAX_AIR_JUMPS).toBe(1);
+    expect(canAirJump(0)).toBe(true);
+    expect(canAirJump(1)).toBe(false);
+    expect(canAirJump(2)).toBe(false);
   });
 });

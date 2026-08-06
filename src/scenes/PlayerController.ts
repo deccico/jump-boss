@@ -9,7 +9,7 @@ import {
   PLAYER_MAX_HEARTS,
   type HealthState,
 } from '../game/health';
-import { canJump } from '../game/physics';
+import { canAirJump, canJump } from '../game/physics';
 import {
   applyPickup,
   canTransform,
@@ -32,12 +32,6 @@ export interface PlayerCallbacks {
 const NORMAL_DISPLAY = { w: 74, h: 96 };
 const NORMAL_HURTBOX = { w: 52, h: 84 };
 const TRANSFORMED_DISPLAY = { w: 128, h: 154 };
-const TRANSFORMED_HURTBOX = { w: 92, h: 138 };
-
-/** Sets the arcade body size in *display* pixels regardless of texture scale. */
-function setBodyDisplaySize(sprite: Phaser.Physics.Arcade.Sprite, w: number, h: number): void {
-  sprite.body?.setSize(w / sprite.scaleX, h / sprite.scaleY, true);
-}
 
 /**
  * The player: arcade sprite + input on the Phaser side, with all rules
@@ -52,6 +46,7 @@ export class PlayerController {
   private keys: Record<'left' | 'right' | 'up' | 'a' | 'd' | 'w' | 'space' | 'e' | 'shift', Phaser.Input.Keyboard.Key> | null = null;
   private groundedAt: number | null = null;
   private jumpPressedAt: number | null = null;
+  private airJumpsUsed = 0;
   private baseTexture: string;
   private transformed = false;
   private spawnPoint: { x: number; y: number };
@@ -68,8 +63,11 @@ export class PlayerController {
     this.spawnPoint = { x, y };
     this.sprite = scene.physics.add.sprite(x, y, this.baseTexture);
     this.sprite.setDisplaySize(NORMAL_DISPLAY.w, NORMAL_DISPLAY.h);
-    setBodyDisplaySize(this.sprite, NORMAL_HURTBOX.w, NORMAL_HURTBOX.h);
+    this.alignBodyToFeet();
     this.sprite.setCollideWorldBounds(true);
+    // drawn in front of platforms so the oversized Muscle Mayhem art overlaps
+    // scenery instead of clipping behind it
+    this.sprite.setDepth(5);
 
     const keyboard = scene.input.keyboard;
     if (keyboard) {
@@ -107,8 +105,10 @@ export class PlayerController {
       this.sprite.setVelocityX(0);
     }
 
-    if (body.blocked.down || body.touching.down) {
+    const grounded = body.blocked.down || body.touching.down;
+    if (grounded) {
       this.groundedAt = nowMs;
+      this.airJumpsUsed = 0;
     }
     const jumpJustPressed =
       Phaser.Input.Keyboard.JustDown(keys.space) ||
@@ -120,6 +120,12 @@ export class PlayerController {
     if (canJump(this.groundedAt, this.jumpPressedAt, nowMs)) {
       this.sprite.setVelocityY(jumpVelocity(this.effects, nowMs));
       this.groundedAt = null;
+      this.jumpPressedAt = null;
+      this.sfx.jump();
+    } else if (jumpJustPressed && !grounded && canAirJump(this.airJumpsUsed)) {
+      // the double space jump
+      this.airJumpsUsed += 1;
+      this.sprite.setVelocityY(jumpVelocity(this.effects, nowMs));
       this.jumpPressedAt = null;
       this.sfx.jump();
     }
@@ -148,16 +154,30 @@ export class PlayerController {
     }
   }
 
+  /**
+   * Muscle Mayhem is a costume, not a collision change: the big monster art is
+   * drawn in front while the hurtbox stays the normal player size, so the
+   * transformed player still fits everywhere the jumper fits.
+   */
   private applyTransformLook(on: boolean): void {
-    if (on) {
-      this.sprite.setTexture('boss-mayhem');
-      this.sprite.setDisplaySize(TRANSFORMED_DISPLAY.w, TRANSFORMED_DISPLAY.h);
-      setBodyDisplaySize(this.sprite, TRANSFORMED_HURTBOX.w, TRANSFORMED_HURTBOX.h);
-    } else {
-      this.sprite.setTexture(this.baseTexture);
-      this.sprite.setDisplaySize(NORMAL_DISPLAY.w, NORMAL_DISPLAY.h);
-      setBodyDisplaySize(this.sprite, NORMAL_HURTBOX.w, NORMAL_HURTBOX.h);
+    const feetY = this.sprite.y + this.sprite.displayHeight / 2;
+    const display = on ? TRANSFORMED_DISPLAY : NORMAL_DISPLAY;
+    this.sprite.setTexture(on ? 'boss-mayhem' : this.baseTexture);
+    this.sprite.setDisplaySize(display.w, display.h);
+    this.sprite.setY(feetY - display.h / 2);
+    this.alignBodyToFeet();
+  }
+
+  /** Normal-sized hurtbox anchored to the bottom of the sprite (the feet). */
+  private alignBodyToFeet(): void {
+    const body = this.sprite.body as Phaser.Physics.Arcade.Body | null;
+    if (!body) {
+      return;
     }
+    const frameW = NORMAL_HURTBOX.w / this.sprite.scaleX;
+    const frameH = NORMAL_HURTBOX.h / this.sprite.scaleY;
+    body.setSize(frameW, frameH, false);
+    body.setOffset((this.sprite.width - frameW) / 2, this.sprite.height - frameH);
   }
 
   pickUp(type: PowerUpType, nowMs: number): void {

@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { createSfx, type Sfx } from '../audio/sfx';
+import { ARENA_GROUND as GROUND, ARENA_PLAYER_SPAWN as PLAYER_SPAWN, ARENA_SIDE_PLATFORMS as SIDE_PLATFORMS } from '../game/arena';
 import {
   createAttackState,
   knifeVelocity,
@@ -28,12 +29,6 @@ import { goToNext } from './ui/nav';
 import { PAPER_KEY } from './ui/paper';
 import { addMarkerText } from './ui/text';
 
-const GROUND = { x: 0, y: 505, w: 960 };
-const SIDE_PLATFORMS = [
-  { x: 70, y: 365, w: 150 },
-  { x: 740, y: 365, w: 150 },
-];
-const PLAYER_SPAWN = { x: 110, y: 430 };
 const HP_BAR = { x: 620, y: 22, w: 300, h: 22 };
 
 type ProjectileKind = 'knife' | 'bullet' | 'star' | 'sweep' | 'shockwave';

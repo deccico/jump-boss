@@ -48,6 +48,15 @@ export class TitleScene extends Phaser.Scene {
       repeat: -1,
     });
 
+    const credits = addMarkerText(this, width - 74, height - 26, 'credits', 24, '#6b6b6b');
+    credits
+      .setInteractive({ useHandCursor: true })
+      .on('pointerdown', (_p: Phaser.Input.Pointer, _x: number, _y: number, event: Phaser.Types.Input.EventData) => {
+        event.stopPropagation();
+        this.scene.start('Credits');
+      });
+    this.input.keyboard?.on('keydown-C', () => this.scene.start('Credits'));
+
     this.input.keyboard?.once('keydown-SPACE', () => goToNext(this, 'title'));
     this.input.once('pointerdown', () => goToNext(this, 'title'));
   }

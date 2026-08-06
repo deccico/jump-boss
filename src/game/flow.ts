@@ -1,7 +1,8 @@
 /**
  * Screen flow for the whole game, straight from Giulio's notebook:
  * title → character select → platform level → Monster A → Monster B →
- * Huggie Wagye → RIP cutscene → Monster Mayhem → victory (→ back to title).
+ * Huggie Wagye → RIP cutscene → Monster Mayhem → victory → credits
+ * (→ back to title).
  */
 export type BossId = 'bossA' | 'bossB' | 'huggie' | 'mayhem';
 
@@ -14,7 +15,8 @@ export type ScreenId =
   | 'huggie'
   | 'rip'
   | 'mayhem'
-  | 'victory';
+  | 'victory'
+  | 'credits';
 
 export const SCREEN_ORDER: readonly ScreenId[] = [
   'title',
@@ -26,6 +28,7 @@ export const SCREEN_ORDER: readonly ScreenId[] = [
   'rip',
   'mayhem',
   'victory',
+  'credits',
 ];
 
 export interface SceneTarget {
@@ -66,5 +69,7 @@ export function sceneKeyFor(screen: ScreenId): SceneTarget {
       return { key: 'Rip' };
     case 'victory':
       return { key: 'Victory' };
+    case 'credits':
+      return { key: 'Credits' };
   }
 }

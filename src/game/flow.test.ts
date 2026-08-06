@@ -13,6 +13,7 @@ describe('screen flow', () => {
       'rip',
       'mayhem',
       'victory',
+      'credits',
     ]);
   });
 
@@ -25,10 +26,11 @@ describe('screen flow', () => {
     expect(nextScreen('huggie')).toBe('rip');
     expect(nextScreen('rip')).toBe('mayhem');
     expect(nextScreen('mayhem')).toBe('victory');
+    expect(nextScreen('victory')).toBe('credits');
   });
 
-  it('wraps victory back to the title screen', () => {
-    expect(nextScreen('victory')).toBe('title');
+  it('wraps the credits back to the title screen', () => {
+    expect(nextScreen('credits')).toBe('title');
   });
 
   it('throws on unknown screens', () => {
@@ -48,6 +50,7 @@ describe('screen flow', () => {
     expect(sceneKeyFor('platform')).toEqual({ key: 'Platform' });
     expect(sceneKeyFor('rip')).toEqual({ key: 'Rip' });
     expect(sceneKeyFor('victory')).toEqual({ key: 'Victory' });
+    expect(sceneKeyFor('credits')).toEqual({ key: 'Credits' });
   });
 
   it('identifies boss screens', () => {

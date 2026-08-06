@@ -59,3 +59,6 @@ GitHub Pages: **https://deccico.github.io/jump-boss/**
 
 One-time setup: repo **Settings → Pages → Source: GitHub Actions** (and the
 repo must be public for Pages on a free plan).
+
+Visits are counted (cookie-free) by GoatCounter:
+https://adrian2045.goatcounter.com

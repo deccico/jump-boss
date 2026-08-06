@@ -36,8 +36,7 @@ export class CharacterSelectScene extends Phaser.Scene {
     this.add.image(0, 0, PAPER_KEY).setOrigin(0, 0);
 
     addMarkerText(this, width * 0.32, 44, 'make your jumper!', 40);
-    const note = this.add.image(width - 110, 84, 'note-pick-eyes').setScale(0.85);
-    note.setAngle(4);
+    addMarkerText(this, width * 0.68, height * 0.14, 'pick your eyes and body!', 26, '#6b6b6b');
 
     // eye-count tiles
     addMarkerText(this, 88, 118, 'eyes', 28);

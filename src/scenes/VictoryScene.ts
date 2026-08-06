@@ -4,6 +4,7 @@ import { DEFAULT_CHARACTER, isValidCharacter, type CharacterConfig } from '../ga
 import { ensurePlayerTexture } from './ui/drawPlayer';
 import { goToNext } from './ui/nav';
 import { PAPER_KEY } from './ui/paper';
+import { addMarkerText } from './ui/text';
 
 const CONFETTI_COLORS = [0xe8801a, 0x7a4fb5, 0xd23c3c, 0x3aa0d8, 0x2b2b2b];
 
@@ -31,7 +32,7 @@ export class VictoryScene extends Phaser.Scene {
       onComplete: () => sfx.fanfare(),
     });
 
-    const caption = this.add.image(width / 2, height * 0.9, 'victory-caption');
+    const caption = addMarkerText(this, width / 2, height * 0.9, 'VICTORY! YOU WIN!', 44, '#c2601a');
     caption.setAlpha(0);
     this.tweens.add({ targets: caption, alpha: 1, delay: 900, duration: 500 });
 

@@ -2,10 +2,13 @@
  * Manifest of every sprite extracted from Giulio's notebook by
  * tools/extract-sprites.sh. BootScene preloads exactly this list, and the
  * test asserts the files exist so a broken extraction fails the suite.
+ *
+ * Only Giulio's own marks are used as art — the pencil annotations on the
+ * pages are Adrian's notes and are deliberately not extracted; anything
+ * they used to say is rendered as regular game text instead.
  */
 export const SPRITE_KEYS = [
   'title-logo',
-  'note-pick-eyes',
   'eye',
   'swatch-purple',
   'swatch-orange',
@@ -17,10 +20,6 @@ export const SPRITE_KEYS = [
   'icon-speed',
   'icon-x',
   'icon-special',
-  'label-bigjump',
-  'label-speed',
-  'label-mayhem',
-  'label-special',
   'boss-a',
   'boss-b',
   'knife',
@@ -30,7 +29,6 @@ export const SPRITE_KEYS = [
   'tombstone',
   'trophy',
   'victory-lettering',
-  'victory-caption',
 ] as const;
 
 export type SpriteKey = (typeof SPRITE_KEYS)[number];

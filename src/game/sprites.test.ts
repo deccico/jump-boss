@@ -5,8 +5,14 @@ import { SPRITE_KEYS, spritePath } from './sprites';
 
 describe('sprite manifest', () => {
   it('lists a reasonable number of sprites', () => {
-    expect(SPRITE_KEYS.length).toBe(27);
+    expect(SPRITE_KEYS.length).toBe(21);
     expect(new Set(SPRITE_KEYS).size).toBe(SPRITE_KEYS.length);
+  });
+
+  it("keeps Adrian's pencil annotations out of the art set", () => {
+    for (const key of SPRITE_KEYS) {
+      expect(key).not.toMatch(/^(label-|note-|victory-caption)/);
+    }
   });
 
   it('has an extracted PNG on disk for every sprite key', () => {

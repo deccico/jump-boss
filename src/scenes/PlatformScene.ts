@@ -17,10 +17,10 @@ import { PAPER_KEY } from './ui/paper';
 import { addMarkerText } from './ui/text';
 
 const TOAST_FOR: Record<PowerUpType, string> = {
-  bigJump: 'label-bigjump',
-  speed: 'label-speed',
-  x: 'label-mayhem',
-  special: 'label-mayhem',
+  bigJump: 'BIG JUMPS! twice as high!',
+  speed: '2x SPEED!',
+  x: 'X! it charges Muscle Mayhem…',
+  special: 'X! it charges Muscle Mayhem…',
 };
 
 export class PlatformScene extends Phaser.Scene {
@@ -62,6 +62,7 @@ export class PlatformScene extends Phaser.Scene {
     const config: CharacterConfig = isValidCharacter(stored) ? stored : DEFAULT_CHARACTER;
     this.player = new PlayerController(this, SPAWN.x, SPAWN.y, config, this.sfx, {
       onDied: () => this.handleDeath(),
+      onTransform: () => this.showToast('MUSCLE MAYHEM!!'),
     });
     this.physics.add.collider(this.player.sprite, platforms);
 
@@ -92,12 +93,24 @@ export class PlatformScene extends Phaser.Scene {
     addMarkerText(this, width / 2, height - 13, 'arrows move · SPACE jumps · E is special', 21, '#57503f');
   }
 
-  private showToast(labelKey: string): void {
-    const toast = this.add.image(this.scale.width / 2, 96, labelKey).setAlpha(0).setScale(0.9);
+  private showToast(message: string): void {
+    const text = addMarkerText(this, 0, 0, message, 32, '#c2601a');
+    const bubble = this.add.graphics();
+    drawWobblyRect(
+      bubble,
+      -text.width / 2 - 20,
+      -text.height / 2 - 10,
+      text.width + 40,
+      text.height + 20,
+      message.length,
+      { thickness: 3, fill: 0xfff6d8, fillAlpha: 0.95 },
+    );
+    const toast = this.add.container(this.scale.width / 2, 96, [bubble, text]);
+    toast.setDepth(20).setAlpha(0).setScale(0.9);
     this.tweens.chain({
       targets: toast,
       tweens: [
-        { alpha: 1, scale: 1.15, duration: 220, ease: 'Back.easeOut' },
+        { alpha: 1, scale: 1.08, duration: 220, ease: 'Back.easeOut' },
         { alpha: 1, duration: 1200 },
         { alpha: 0, y: 70, duration: 320, onComplete: () => toast.destroy() },
       ],

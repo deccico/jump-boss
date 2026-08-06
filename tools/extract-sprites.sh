@@ -89,9 +89,12 @@ crop() {
 
 echo "Extracting sprites..."
 
+# Note: the pencil annotations on the pages (the "pick eyes…" note, the
+# power-up labels, the victory caption) are Adrian's notes, not Giulio's art —
+# they are intentionally not extracted; the game renders proper text instead.
+
 # ---- page 1: title + character selection ----------------------------------
 crop title-logo      1 0.08 0.02 0.68 0.11 220
-crop note-pick-eyes  1 0.78 0.18 0.21 0.15 160 6
 crop eye             1 0.435 0.290 0.040 0.044 80
 crop swatch-purple   1 0.18 0.42 0.33 0.060 256 opaque
 crop swatch-orange   1 0.635 0.41 0.045 0.09 256 opaque
@@ -105,10 +108,6 @@ crop icon-bigjump    2 0.13 0.03 0.42 0.27 128
 crop icon-speed      2 0.15 0.31 0.36 0.22 128
 crop icon-x          2 0.18 0.52 0.30 0.20 128
 crop icon-special    2 0.20 0.79 0.16 0.13 128
-crop label-bigjump   2 0.54 0.15 0.34 0.11 100
-crop label-speed     2 0.535 0.375 0.27 0.08 100
-crop label-mayhem    2 0.42 0.71 0.53 0.10 100
-crop label-special   2 0.39 0.81 0.56 0.12 100
 
 # ---- pages 3-6: the monsters ----------------------------------------------
 crop boss-a          3 0.03 0.02 0.87 0.825 512
@@ -124,7 +123,6 @@ crop boss-mayhem     6 0.02 0.26 0.88 0.70 560 14 0.70,0.85,0.28,0.13
 crop tombstone       7 0.20 0.28 0.55 0.66 480
 crop trophy          8 0.06 0.24 0.84 0.56 440
 crop victory-lettering 8 0.02 0.02 0.66 0.10 160
-crop victory-caption 8 0.28 0.86 0.52 0.08 100
 
 if [ "${1:-}" = "--sheet" ]; then
   echo "Building contact sheet..."

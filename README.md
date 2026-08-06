@@ -32,6 +32,27 @@ yourself.
 
 Losing all five hearts just restarts the current screen. Nobody gets stuck.
 
+## Sounds & music
+
+All audio is synthesized in code — there are no audio files. The speaker icon
+in the top-right corner (or the **M** key) mutes everything, and the choice is
+remembered.
+
+To change how things sound, edit the numbers and the dev server reloads
+instantly:
+
+- **Sound effects** — `src/audio/sfx.ts`, the `SFX_DEFS` table: one entry per
+  effect (jump, stomp, hurt, pickup, transform, fanfare) with the wave shape
+  (`square`/`sine`/`triangle`/`sawtooth`), a start→end frequency sweep in Hz,
+  duration and volume; adding a `notes: [...]` list plays a tiny arpeggio
+  instead of a sweep.
+- **Music** — `src/audio/music.ts`, the `TRACKS` table: each track (title,
+  level, boss, victory) is a tempo plus voices made of notes
+  `n(startBeat, pitch, lengthInBeats)`, with pitches from the `N` table.
+- Prefer real recorded sounds? Free CC0 packs (e.g. kenney.nl) can be dropped
+  into `public/assets/`, loaded in `BootScene`, and played through Phaser's
+  sound manager instead of the synth.
+
 ## Development
 
 ```bash

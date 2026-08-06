@@ -1,4 +1,5 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
+import { setMuted } from './audioSettings';
 import { createSfx, SFX_DEFS, type SfxName } from './sfx';
 
 function stubAudioContext() {
@@ -54,6 +55,20 @@ describe('sfx definitions', () => {
 });
 
 describe('createSfx', () => {
+  afterEach(() => setMuted(false));
+
+  it('plays nothing while muted', () => {
+    const { context, oscillators } = stubAudioContext();
+    const sfx = createSfx(() => context);
+    setMuted(true);
+    sfx.jump();
+    sfx.stomp();
+    expect(oscillators).toHaveLength(0);
+    setMuted(false);
+    sfx.jump();
+    expect(oscillators).toHaveLength(1);
+  });
+
   it('never throws in Node where AudioContext is undefined', () => {
     const sfx = createSfx();
     for (const name of Object.keys(SFX_DEFS) as SfxName[]) {

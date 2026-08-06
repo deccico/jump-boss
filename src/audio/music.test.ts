@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest';
+import { setMuted } from './audioSettings';
 import { MusicPlayer, TRACKS, type MusicTrack, type TrackName } from './music';
 
 function stubAudioContext(state: AudioContextState = 'running') {
@@ -77,6 +78,7 @@ describe('MusicPlayer', () => {
   afterEach(() => {
     player?.stop();
     player = null;
+    setMuted(false);
   });
 
   it('never throws in Node without an AudioContext', () => {
@@ -119,5 +121,28 @@ describe('MusicPlayer', () => {
     player.play('level');
     expect(oscillators.length).toBeGreaterThan(0);
     expect(() => player?.stop()).not.toThrow();
+  });
+
+  it('stays silent while muted and resumes the requested track on unmute', () => {
+    const { context, oscillators } = stubAudioContext();
+    player = new MusicPlayer(() => context);
+    setMuted(true);
+    player.play('level');
+    expect(oscillators).toHaveLength(0);
+    setMuted(false);
+    player.refreshMuted();
+    expect(oscillators).toHaveLength(noteCount(TRACKS.level));
+  });
+
+  it('silences on mute without forgetting the track', () => {
+    const { context, oscillators } = stubAudioContext();
+    player = new MusicPlayer(() => context);
+    player.play('boss');
+    const scheduled = oscillators.length;
+    setMuted(true);
+    player.refreshMuted();
+    setMuted(false);
+    player.refreshMuted();
+    expect(oscillators.length).toBe(scheduled + noteCount(TRACKS.boss));
   });
 });

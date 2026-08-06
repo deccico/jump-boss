@@ -16,6 +16,7 @@ import { drawWobblyRect, ensurePlatformTexture } from './ui/marker';
 import { goToNext } from './ui/nav';
 import { PAPER_KEY } from './ui/paper';
 import { addMarkerText } from './ui/text';
+import { addMuteButton } from './ui/muteButton';
 
 const TOAST_FOR: Record<PowerUpType, string> = {
   bigJump: 'BIG JUMPS! twice as high!',
@@ -39,6 +40,7 @@ export class PlatformScene extends Phaser.Scene {
     const { width, height } = this.scale;
     this.ending = false;
     music.play('level');
+    addMuteButton(this);
     this.cameras.main.fadeIn(300, 245, 242, 232);
     this.add.image(0, 0, PAPER_KEY).setOrigin(0, 0);
     this.sfx = createSfx();

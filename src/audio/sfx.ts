@@ -1,8 +1,10 @@
+import { isMuted } from './audioSettings';
+
 /**
  * All sound effects are tiny WebAudio synth bleeps — no audio assets.
  * The AudioContext is created lazily on first play (which always happens
  * after a user input, satisfying autoplay policies) and everything no-ops
- * where AudioContext doesn't exist (Node test runs).
+ * where AudioContext doesn't exist (Node test runs) or while muted.
  */
 export interface SfxDef {
   wave: OscillatorType;
@@ -48,6 +50,9 @@ export function createSfx(ctxFactory?: () => AudioContext): Sfx {
   };
 
   const play = (def: SfxDef): void => {
+    if (isMuted()) {
+      return;
+    }
     const audio = getContext();
     if (!audio) {
       return;

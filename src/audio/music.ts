@@ -5,6 +5,8 @@
  * playback waits for the first key/pointer gesture. Everything no-ops where
  * AudioContext doesn't exist (Node tests).
  */
+import { isMuted } from './audioSettings';
+
 export interface MusicNote {
   beat: number;
   freq: number;
@@ -24,9 +26,10 @@ export interface MusicTrack {
 }
 
 const N = {
-  C3: 130.81, D3: 146.83, E3: 164.81, F3: 174.61, G3: 196.0, A3: 220.0, B3: 246.94,
-  C4: 261.63, D4: 293.66, E4: 329.63, F4: 349.23, G4: 392.0, A4: 440.0, B4: 493.88,
-  C5: 523.25, D5: 587.33, E5: 659.25, F5: 698.46, G5: 783.99, A5: 880.0, B5: 987.77,
+  A2: 110.0, Bb2: 116.54,
+  C3: 130.81, D3: 146.83, Eb3: 155.56, E3: 164.81, F3: 174.61, G3: 196.0, A3: 220.0, B3: 246.94,
+  C4: 261.63, D4: 293.66, E4: 329.63, F4: 349.23, G4: 392.0, A4: 440.0, Bb4: 466.16, B4: 493.88,
+  C5: 523.25, D5: 587.33, Eb5: 622.25, E5: 659.25, F5: 698.46, G5: 783.99, A5: 880.0, B5: 987.77,
   C6: 1046.5,
 } as const;
 
@@ -35,33 +38,31 @@ function n(beat: number, freq: number, beats: number): MusicNote {
 }
 
 export const TRACKS = {
-  // bouncy and bright, for the title and character select
+  // slow and spooky, for the title and character select — monsters ahead
   title: {
-    bpm: 132,
+    bpm: 90,
     beatsPerLoop: 16,
     voices: [
       {
         wave: 'square',
-        gain: 0.045,
+        gain: 0.035,
         notes: [
-          n(0, N.C5, 0.5), n(0.5, N.E5, 0.5), n(1, N.G5, 0.5), n(1.5, N.C6, 0.5),
-          n(2, N.G5, 0.5), n(2.5, N.E5, 0.5), n(3, N.G5, 1),
-          n(4, N.F5, 0.5), n(4.5, N.A5, 0.5), n(5, N.C6, 1),
-          n(6, N.A5, 0.5), n(6.5, N.F5, 0.5), n(7, N.G5, 1),
-          n(8, N.E5, 0.5), n(8.5, N.G5, 0.5), n(9, N.C6, 0.5), n(9.5, N.G5, 0.5),
-          n(10, N.A5, 0.5), n(10.5, N.F5, 0.5), n(11, N.A5, 1),
-          n(12, N.G5, 0.5), n(12.5, N.E5, 0.5), n(13, N.D5, 0.5), n(13.5, N.E5, 0.5),
-          n(14, N.C5, 2),
+          n(0, N.A4, 1.5), n(2, N.Bb4, 1.5), n(4, N.A4, 1), n(5.5, N.E4, 2),
+          n(8, N.A4, 1.5), n(10, N.Eb5, 1.5), n(12, N.D5, 1), n(13.5, N.Bb4, 1),
+          n(14.5, N.A4, 1.5),
         ],
       },
       {
+        // a ghostly answer floating above
+        wave: 'sine',
+        gain: 0.03,
+        notes: [n(6.5, N.E5, 1), n(11.5, N.Eb5, 1), n(14.5, N.B4, 1.5)],
+      },
+      {
         wave: 'triangle',
-        gain: 0.06,
+        gain: 0.075,
         notes: [
-          n(0, N.C3, 1), n(1, N.G3, 1), n(2, N.C3, 1), n(3, N.G3, 1),
-          n(4, N.F3, 1), n(5, N.F3, 1), n(6, N.G3, 1), n(7, N.G3, 1),
-          n(8, N.C3, 1), n(9, N.G3, 1), n(10, N.F3, 1), n(11, N.F3, 1),
-          n(12, N.G3, 1), n(13, N.G3, 1), n(14, N.C3, 2),
+          n(0, N.A2, 4), n(4, N.Eb3, 4), n(8, N.A2, 4), n(12, N.E3, 2), n(14, N.Bb2, 2),
         ],
       },
     ],
@@ -164,20 +165,41 @@ export class MusicPlayer {
     if (this.current === name) {
       return;
     }
-    this.stop();
+    this.stopPlayback();
     this.current = name;
+    this.startCurrent();
+  }
+
+  stop(): void {
+    this.stopPlayback();
+    this.current = null;
+  }
+
+  /** Re-reads the mute switch: silences, or resumes the requested track. */
+  refreshMuted(): void {
+    if (isMuted()) {
+      this.stopPlayback();
+    } else if (this.current) {
+      this.startCurrent();
+    }
+  }
+
+  private startCurrent(): void {
+    if (isMuted() || !this.current) {
+      return;
+    }
     const ctx = this.ensureContext();
     if (!ctx) {
       return;
     }
     if (ctx.state === 'suspended') {
-      this.attachUnlock(ctx, name);
+      this.attachUnlock(ctx, this.current);
       return;
     }
-    this.beginPlayback(ctx, name);
+    this.beginPlayback(ctx, this.current);
   }
 
-  stop(): void {
+  private stopPlayback(): void {
     if (this.timer) {
       clearInterval(this.timer);
       this.timer = null;
@@ -189,7 +211,6 @@ export class MusicPlayer {
       setTimeout(() => master.disconnect(), 400);
     }
     this.master = null;
-    this.current = null;
   }
 
   private ensureContext(): AudioContext | null {
@@ -214,7 +235,7 @@ export class MusicPlayer {
       window.removeEventListener('keydown', unlock);
       this.unlockAttached = false;
       void ctx.resume().then(() => {
-        if (this.current !== null) {
+        if (this.current !== null && !isMuted()) {
           this.beginPlayback(ctx, this.current);
         }
       });
@@ -226,6 +247,9 @@ export class MusicPlayer {
   }
 
   private beginPlayback(ctx: AudioContext, name: TrackName): void {
+    if (this.master) {
+      return; // already playing
+    }
     this.master = ctx.createGain();
     this.master.gain.value = 1;
     this.master.connect(ctx.destination);

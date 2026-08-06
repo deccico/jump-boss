@@ -29,8 +29,10 @@ import { drawWobblyRect, ensurePlatformTexture, MARKER_ORANGE } from './ui/marke
 import { goToNext } from './ui/nav';
 import { PAPER_KEY } from './ui/paper';
 import { addMarkerText } from './ui/text';
+import { addMuteButton } from './ui/muteButton';
 
-const HP_BAR = { x: 620, y: 22, w: 300, h: 22 };
+// leaves room for the mute button in the corner
+const HP_BAR = { x: 596, y: 22, w: 290, h: 22 };
 
 type ProjectileKind = 'knife' | 'bullet' | 'star' | 'sweep' | 'shockwave';
 
@@ -74,6 +76,7 @@ export class BossScene extends Phaser.Scene {
     this.patrolDir = -1;
 
     music.play('boss');
+    addMuteButton(this);
     this.cameras.main.fadeIn(300, 245, 242, 232);
     this.add.image(0, 0, PAPER_KEY).setOrigin(0, 0);
     this.sfx = createSfx();

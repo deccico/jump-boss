@@ -14,6 +14,7 @@ import { drawWobblyRect } from './ui/marker';
 import { goToNext } from './ui/nav';
 import { PAPER_KEY } from './ui/paper';
 import { addMarkerText } from './ui/text';
+import { addMuteButton } from './ui/muteButton';
 
 const HIGHLIGHT = 0xe8801a;
 
@@ -32,6 +33,7 @@ export class CharacterSelectScene extends Phaser.Scene {
     const { width, height } = this.scale;
     this.config = { ...DEFAULT_CHARACTER };
     this.eyeTiles = [];
+    addMuteButton(this);
     this.bodyTiles = [];
     this.add.image(0, 0, PAPER_KEY).setOrigin(0, 0);
 

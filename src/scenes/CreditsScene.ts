@@ -3,6 +3,7 @@ import { music } from '../audio/music';
 import { goToNext } from './ui/nav';
 import { PAPER_KEY } from './ui/paper';
 import { addMarkerText } from './ui/text';
+import { addMuteButton } from './ui/muteButton';
 
 export class CreditsScene extends Phaser.Scene {
   constructor() {
@@ -12,6 +13,7 @@ export class CreditsScene extends Phaser.Scene {
   create(): void {
     const { width, height } = this.scale;
     music.play('victory');
+    addMuteButton(this);
     this.add.image(0, 0, PAPER_KEY).setOrigin(0, 0);
 
     addMarkerText(this, width / 2, height * 0.14, 'credits', 52);

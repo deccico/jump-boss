@@ -6,6 +6,7 @@ import { ensurePlayerTexture } from './ui/drawPlayer';
 import { goToNext } from './ui/nav';
 import { PAPER_KEY } from './ui/paper';
 import { addMarkerText } from './ui/text';
+import { addMuteButton } from './ui/muteButton';
 
 const CONFETTI_COLORS = [0xe8801a, 0x7a4fb5, 0xd23c3c, 0x3aa0d8, 0x2b2b2b];
 
@@ -18,6 +19,7 @@ export class VictoryScene extends Phaser.Scene {
   create(): void {
     const { width, height } = this.scale;
     music.play('victory');
+    addMuteButton(this);
     this.add.image(0, 0, PAPER_KEY).setOrigin(0, 0);
     const sfx = createSfx();
 

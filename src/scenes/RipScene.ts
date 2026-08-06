@@ -4,6 +4,7 @@ import { createSfx } from '../audio/sfx';
 import { goToNext } from './ui/nav';
 import { PAPER_KEY } from './ui/paper';
 import { addMarkerText } from './ui/text';
+import { addMuteButton } from './ui/muteButton';
 
 /** Page 7 of the notebook: the tombstone. Huggie Wagye dies. */
 export class RipScene extends Phaser.Scene {
@@ -14,6 +15,7 @@ export class RipScene extends Phaser.Scene {
   create(): void {
     const { width, height } = this.scale;
     music.stop(); // a quiet moment for Huggie Wagye
+    addMuteButton(this);
     this.add.image(0, 0, PAPER_KEY).setOrigin(0, 0);
     const sfx = createSfx();
 
@@ -31,7 +33,7 @@ export class RipScene extends Phaser.Scene {
       },
     });
 
-    const caption = addMarkerText(this, width / 2, height * 0.92, 'Huggie Wagye dies…', 34);
+    const caption = addMarkerText(this, width / 2, height * 0.92, 'rest in NO peace…', 36);
     caption.setAlpha(0);
     this.tweens.add({ targets: caption, alpha: 1, delay: 1100, duration: 500 });
 

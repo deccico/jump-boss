@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { music } from '../audio/music';
 import { goToNext } from './ui/nav';
 import { PAPER_KEY } from './ui/paper';
 import { addMarkerText } from './ui/text';
@@ -10,6 +11,7 @@ export class TitleScene extends Phaser.Scene {
 
   create(): void {
     const { width, height } = this.scale;
+    music.play('title');
     this.add.image(0, 0, PAPER_KEY).setOrigin(0, 0);
 
     const logo = this.add.image(width / 2, height * 0.28, 'title-logo');

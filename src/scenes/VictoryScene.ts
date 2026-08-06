@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { music } from '../audio/music';
 import { createSfx } from '../audio/sfx';
 import { DEFAULT_CHARACTER, isValidCharacter, type CharacterConfig } from '../game/character';
 import { ensurePlayerTexture } from './ui/drawPlayer';
@@ -16,6 +17,7 @@ export class VictoryScene extends Phaser.Scene {
 
   create(): void {
     const { width, height } = this.scale;
+    music.play('victory');
     this.add.image(0, 0, PAPER_KEY).setOrigin(0, 0);
     const sfx = createSfx();
 

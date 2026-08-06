@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { music } from '../audio/music';
 import { createSfx } from '../audio/sfx';
 import { goToNext } from './ui/nav';
 import { PAPER_KEY } from './ui/paper';
@@ -12,6 +13,7 @@ export class RipScene extends Phaser.Scene {
 
   create(): void {
     const { width, height } = this.scale;
+    music.stop(); // a quiet moment for Huggie Wagye
     this.add.image(0, 0, PAPER_KEY).setOrigin(0, 0);
     const sfx = createSfx();
 

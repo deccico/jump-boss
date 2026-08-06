@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { music } from '../audio/music';
 import { createSfx, type Sfx } from '../audio/sfx';
 import { ARENA_GROUND as GROUND, ARENA_PLAYER_SPAWN as PLAYER_SPAWN, ARENA_SIDE_PLATFORMS as SIDE_PLATFORMS } from '../game/arena';
 import {
@@ -72,6 +73,7 @@ export class BossScene extends Phaser.Scene {
     this.lastTransformHitMs = 0;
     this.patrolDir = -1;
 
+    music.play('boss');
     this.cameras.main.fadeIn(300, 245, 242, 232);
     this.add.image(0, 0, PAPER_KEY).setOrigin(0, 0);
     this.sfx = createSfx();

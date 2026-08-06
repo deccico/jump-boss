@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { music } from '../audio/music';
 import { createSfx, type Sfx } from '../audio/sfx';
 import { DEFAULT_CHARACTER, isValidCharacter, type CharacterConfig } from '../game/character';
 import {
@@ -37,6 +38,7 @@ export class PlatformScene extends Phaser.Scene {
   create(): void {
     const { width, height } = this.scale;
     this.ending = false;
+    music.play('level');
     this.cameras.main.fadeIn(300, 245, 242, 232);
     this.add.image(0, 0, PAPER_KEY).setOrigin(0, 0);
     this.sfx = createSfx();

@@ -70,6 +70,25 @@ deterministically in Node with no browser or WebGL. Phaser scenes under
 `src/scenes/` are thin shells that render that logic. Sound is synthesized with
 WebAudio (no audio assets) and no-ops safely where AudioContext doesn't exist.
 
+## Changes from the first playtest (2026-08-06, Adrian)
+
+- **Only Giulio's marks are art.** The pencil annotations on the scans (the
+  "pick eyes" note, power-up labels, victory caption) are Adrian's notes, so
+  they were removed from the sprite set; the game renders proper text instead.
+  A test keeps annotation sprites from coming back.
+- **Double jump** (press jump again in mid-air) — the boss-arena side
+  platforms were also lowered into single-jump range; they had been drawn
+  higher than a base jump could reach.
+- **Muscle Mayhem is a costume**: the transformed player keeps the normal
+  hurtbox and the oversized art is drawn in front of scenery, so the monster
+  fits everywhere the jumper fits (previously he couldn't pass under low
+  platforms).
+- **Music**: synthesized chiptune loops (title, level, boss, victory —
+  silence during the RIP scene) as pure note data through a WebAudio
+  lookahead scheduler; still no external assets.
+- **Credits page** after Victory and via the title screen: game design and
+  graphics Giulio Deccico; game programming Adrian Deccico.
+
 ## Release cycle
 
 Tests run before every commit (`npm run check` = typecheck + tests + production

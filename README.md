@@ -22,11 +22,13 @@ yourself.
 ## How to play
 
 - **Arrow keys / WASD** — move
-- **SPACE / up** — jump (grab *Big Jumps* to jump twice as high, *2x Speed* to run faster)
+- **SPACE / up** — jump, and press again in mid-air for a **double jump**
+  (grab *Big Jumps* to jump twice as high, *2x Speed* to run faster)
 - **E / Shift** — when the special meter is full (collect two X's): transform
   into **Muscle Mayhem** — invincible, and you damage bosses by touching them
 - **Jump on a monster's head** to hurt it. Monster A's chest **X** is his weak
   spot — stomp him, then touch the X while he's dizzy!
+- **C** on the title screen shows the credits
 
 Losing all five hearts just restarts the current screen. Nobody gets stuck.
 
